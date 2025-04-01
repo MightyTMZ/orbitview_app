@@ -19,7 +19,9 @@ import {
   Sparkles,
   GraduationCap,
   DollarSign,
-  Star
+  Star,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 interface Job {
@@ -42,8 +44,11 @@ interface Job {
   };
 }
 
+const ITEMS_PER_PAGE = 5;
+
 export default function JobsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [jobs, setJobs] = useState<Job[]>([
     {
       id: "1",
@@ -116,8 +121,92 @@ export default function JobsPage() {
         industry: "Enterprise Software",
         rating: 4.6
       }
+    },
+    {
+      id: "4",
+      title: "Senior AI Product Manager",
+      company: "InnovateAI",
+      location: "Boston, MA (Hybrid)",
+      type: "full-time",
+      salary: "$150,000 - $200,000",
+      posted: "4 days ago",
+      description: "Lead the development of AI-powered products from conception to launch. Work with cross-functional teams to deliver innovative solutions.",
+      requirements: [
+        "7+ years of product management experience",
+        "Strong understanding of AI/ML technologies",
+        "Experience with agile methodologies",
+        "Excellent communication skills"
+      ],
+      skills: ["Product Management", "AI Strategy", "Agile", "Team Leadership"],
+      matchScore: 89,
+      applicants: 28,
+      companyInfo: {
+        size: "200-500",
+        industry: "AI Products",
+        rating: 4.7
+      }
+    },
+    {
+      id: "5",
+      title: "Computer Vision Engineer",
+      company: "VisionTech Solutions",
+      location: "Seattle, WA (On-site)",
+      type: "full-time",
+      salary: "$130,000 - $180,000",
+      posted: "5 days ago",
+      description: "Develop state-of-the-art computer vision solutions for autonomous systems. Work on challenging problems in object detection and tracking.",
+      requirements: [
+        "MS/PhD in Computer Vision or related field",
+        "4+ years of experience in computer vision",
+        "Expertise in PyTorch or TensorFlow",
+        "Strong mathematics background"
+      ],
+      skills: ["Computer Vision", "Deep Learning", "Python", "C++"],
+      matchScore: 91,
+      applicants: 45,
+      companyInfo: {
+        size: "100-500",
+        industry: "Computer Vision",
+        rating: 4.5
+      }
+    },
+    {
+      id: "6",
+      title: "AI Infrastructure Engineer",
+      company: "CloudScale AI",
+      location: "Austin, TX (Remote)",
+      type: "full-time",
+      salary: "$140,000 - $190,000",
+      posted: "1 week ago",
+      description: "Build and maintain scalable infrastructure for AI model training and deployment. Focus on performance optimization and reliability.",
+      requirements: [
+        "5+ years of infrastructure engineering",
+        "Experience with cloud platforms (AWS/GCP)",
+        "Knowledge of ML deployment workflows",
+        "Strong DevOps background"
+      ],
+      skills: ["Kubernetes", "Docker", "AWS", "MLOps"],
+      matchScore: 87,
+      applicants: 52,
+      companyInfo: {
+        size: "500-1000",
+        industry: "Cloud Infrastructure",
+        rating: 4.4
+      }
     }
   ]);
+
+  // Filter jobs based on search query
+  const filteredJobs = jobs.filter(job => 
+    job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredJobs.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedJobs = filteredJobs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-background">
@@ -150,17 +239,66 @@ export default function JobsPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Recommended for you</h2>
-              <Button variant="ghost" className="text-sm">
-                View all
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              <div>
+                <h2 className="text-xl font-semibold">Recommended for you</h2>
+                <p className="text-sm text-muted-foreground">
+                  Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, filteredJobs.length)} of {filteredJobs.length} jobs
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-medium">{currentPage}</span>
+                  <span className="text-sm text-muted-foreground">of</span>
+                  <span className="text-sm font-medium">{totalPages}</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-4">
-              {jobs.map((job) => (
+              {paginatedJobs.map((job) => (
                 <JobCard key={job.id} job={job} />
               ))}
+            </div>
+
+            {/* Mobile Pagination */}
+            <div className="flex items-center justify-center gap-2 lg:hidden mt-6">
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium">{currentPage}</span>
+                <span className="text-sm text-muted-foreground">of</span>
+                <span className="text-sm font-medium">{totalPages}</span>
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
           </div>
 
@@ -222,11 +360,6 @@ export default function JobsPage() {
 }
 
 function JobCard({ job }: { job: Job }) {
-  const typeColors = {
-    'full-time': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-    'internship': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-  };
-
   return (
     <Card className="p-6">
       <div className="flex items-start justify-between mb-4">

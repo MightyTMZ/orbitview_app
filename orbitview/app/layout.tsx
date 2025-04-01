@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, Briefcase, User } from 'lucide-react';
+import { Home, Briefcase, User, LayoutDashboard } from 'lucide-react';
 
 const poppins = Poppins({ 
   subsets: ['latin'],
@@ -39,6 +39,12 @@ export default function RootLayout({
                   <Link href="/">
                     <Home className="w-4 h-4 mr-2" />
                     Home
+                  </Link>
+                </Button>
+                <Button variant="ghost" asChild>
+                  <Link href="/dashboard">
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Dashboard
                   </Link>
                 </Button>
                 <Button variant="ghost" asChild>

@@ -282,7 +282,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-            Your AI-Powered Career Accelerator
+            Your Career Accelerator
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
             Showcase your true potential, connect with opportunities, and build your career in the AI era - all powered by intelligent automation.

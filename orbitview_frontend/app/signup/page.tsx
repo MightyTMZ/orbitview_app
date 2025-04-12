@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth";
 import { 
   Github, 
   Linkedin, 
@@ -20,15 +23,46 @@ import {
 import Link from "next/link";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const { register } = useAuth();
   const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    re_password: "",
+    first_name: "",
+    last_name: "",
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     if (step < 3) {
+      const form = e.currentTarget;
+      const newData = Object.fromEntries(new FormData(form));
+      setFormData(prev => ({ ...prev, ...newData }));
       setStep(step + 1);
-    } else {
-      // Handle final submission
-      console.log("Form submitted");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await register(formData);
+      toast({
+        title: "Registration successful",
+        description: "Welcome to OrbitView!",
+      });
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Registration failed",
+        description: error.response?.data?.detail || "Please check your information",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,14 +81,42 @@ export default function SignUpPage() {
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input id="email" type="email" className="pl-10" placeholder="Enter your email" required />
+                  <Input 
+                    id="email" 
+                    name="email" 
+                    type="email" 
+                    className="pl-10" 
+                    placeholder="Enter your email" 
+                    defaultValue={formData.email}
+                    required 
+                  />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input id="password" type="password" className="pl-10" placeholder="Create a password" required />
+                  <Input 
+                    id="password" 
+                    name="password" 
+                    type="password" 
+                    className="pl-10" 
+                    placeholder="Create a password" 
+                    defaultValue={formData.password}
+                    required 
+                  />
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input 
+                    id="re_password" 
+                    name="re_password" 
+                    type="password" 
+                    className="pl-10" 
+                    placeholder="Confirm password" 
+                    defaultValue={formData.re_password}
+                    required 
+                  />
                 </div>
                 <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
               </div>
@@ -64,17 +126,33 @@ export default function SignUpPage() {
           {step === 2 && (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="first_name">First Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input id="name" type="text" className="pl-10" placeholder="Enter your full name" required />
+                  <Input 
+                    id="first_name" 
+                    name="first_name" 
+                    type="text" 
+                    className="pl-10" 
+                    placeholder="Enter your first name" 
+                    defaultValue={formData.first_name}
+                    required 
+                  />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="company">Current Company</Label>
+                <Label htmlFor="last_name">Last Name</Label>
                 <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input id="company" type="text" className="pl-10" placeholder="Where do you work?" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input 
+                    id="last_name" 
+                    name="last_name" 
+                    type="text" 
+                    className="pl-10" 
+                    placeholder="Enter your last name" 
+                    defaultValue={formData.last_name}
+                    required 
+                  />
                 </div>
               </div>
             </div>
@@ -98,8 +176,8 @@ export default function SignUpPage() {
             </div>
           )}
 
-          <Button type="submit" className="w-full">
-            {step === 3 ? "Complete Sign Up" : "Continue"}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {step === 3 ? (isLoading ? "Creating account..." : "Complete Sign Up") : "Continue"}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
 

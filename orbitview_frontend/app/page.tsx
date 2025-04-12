@@ -19,94 +19,19 @@ import {
   Building2,
   Search,
   GraduationCap,
-  BarChart3
+  BarChart3,
+  Network,
+  Orbit,
+  Sparkles,
+  Bot,
+  LineChart,
+  Share2
 } from "lucide-react";
 import Link from "next/link";
 
-interface RecommendedJob {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  matchScore: number;
-  posted: string;
-}
-
-interface Connection {
-  id: string;
-  name: string;
-  title: string;
-  company: string;
-  image: string;
-}
-
-interface Company {
-  id: string;
-  name: string;
-  logo: string;
-  industry: string;
-  description: string;
-  matchScore: number;
-}
-
 export default function Home() {
   // This would come from your auth system
-  const [isAuthenticated] = useState(false);
-
-  const [recommendedJobs] = useState<RecommendedJob[]>([
-    {
-      id: "1",
-      title: "Senior AI Engineer",
-      company: "TechCorp",
-      location: "San Francisco, CA",
-      matchScore: 95,
-      posted: "2 days ago"
-    },
-    {
-      id: "2",
-      title: "Machine Learning Engineer",
-      company: "AI Solutions Inc.",
-      location: "Remote",
-      matchScore: 92,
-      posted: "1 day ago"
-    }
-  ]);
-
-  const [suggestedConnections] = useState<Connection[]>([
-    {
-      id: "1",
-      name: "Sarah Chen",
-      title: "AI Research Engineer",
-      company: "Google",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    },
-    {
-      id: "2",
-      name: "Michael Rodriguez",
-      title: "ML Engineer",
-      company: "Meta",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    }
-  ]);
-
-  const [trendingCompanies] = useState<Company[]>([
-    {
-      id: "1",
-      name: "AI Solutions Inc.",
-      logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-      industry: "Artificial Intelligence",
-      description: "Leading AI research and development company",
-      matchScore: 95
-    },
-    {
-      id: "2",
-      name: "TechCorp",
-      logo: "https://images.unsplash.com/photo-1496200186974-4293800e2c20?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-      industry: "Technology",
-      description: "Enterprise software solutions provider",
-      matchScore: 88
-    }
-  ]);
+  const [isAuthenticated] = useState(true);
 
   return isAuthenticated ? (
     // Authenticated Home Page
@@ -116,7 +41,7 @@ export default function Home() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold">Welcome back, John!</h1>
-            <p className="text-muted-foreground">Here's what's happening in your professional network</p>
+            <p className="text-muted-foreground">Your professional <span className="text-primary font-semibold">orbit</span> is growing. Let's expand your reach.</p>
           </div>
           <Button asChild>
             <Link href="/profile">View Profile</Link>
@@ -136,10 +61,11 @@ export default function Home() {
                 <p className="text-2xl font-bold">324</p>
                 <p className="text-sm text-green-600">↑ 12% this week</p>
               </Card>
+              {/*
               <Card className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="w-5 h-5 text-primary" />
-                  <h3 className="font-medium">Job Match Rate</h3>
+                  <h3 className="font-medium">AI Match Rate</h3>
                 </div>
                 <p className="text-2xl font-bold">85%</p>
                 <p className="text-sm text-green-600">↑ 5% improvement</p>
@@ -147,127 +73,71 @@ export default function Home() {
               <Card className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="w-5 h-5 text-primary" />
-                  <h3 className="font-medium">Network Growth</h3>
+                  <h3 className="font-medium">Orbit Growth</h3>
                 </div>
                 <p className="text-2xl font-bold">1.2k</p>
                 <p className="text-sm text-green-600">↑ 8% this month</p>
-              </Card>
+              </Card>*/}
             </div>
 
-            {/* Recommended Jobs */}
+            {/* AI Insights */}
             <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Recommended Jobs</h2>
-                <Button variant="outline" size="sm" asChild>
-                  <Link href="/jobs">
-                    View All
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-semibold">AI-Powered Insights</h2>
+                  <p className="text-muted-foreground">Your professional story, analyzed and enhanced</p>
+                </div>
+                <Button variant="outline">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Refresh Insights
                 </Button>
               </div>
-              <div className="space-y-4">
-                {recommendedJobs.map((job) => (
-                  <div key={job.id} className="flex items-start justify-between p-4 bg-secondary/30 rounded-lg">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{job.title}</h3>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary">
-                          {job.matchScore}% match
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Building2 className="w-4 h-4" />
-                          <span>{job.company}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>{job.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4" />
-                          <span>{job.posted}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <Button size="sm">Apply Now</Button>
+              <div className="space-y-6">
+                <div className="p-4 bg-secondary/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <LineChart className="w-5 h-5 text-primary" />
+                    <h3 className="font-medium">Skill Growth Trajectory</h3>
                   </div>
-                ))}
-              </div>
-            </Card>
+                  <p className="text-muted-foreground mb-2">
+                    Your expertise in AI and Machine Learning positions you in the top 15% of professionals in your field.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary">Machine Learning</Badge>
+                    <Badge variant="secondary">Neural Networks</Badge>
+                    <Badge variant="secondary">Python</Badge>
+                  </div>
+                </div>
 
-            {/* Network Growth */}
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Grow Your Network</h2>
-                <Button variant="outline" size="sm">
-                  View All
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {suggestedConnections.map((connection) => (
-                  <div key={connection.id} className="flex items-center gap-4 p-4 bg-secondary/30 rounded-lg">
-                    <Avatar>
-                      <AvatarImage src={connection.image} />
-                      <AvatarFallback>{connection.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{connection.name}</h3>
-                      <p className="text-sm text-muted-foreground">{connection.title}</p>
-                      <p className="text-sm text-muted-foreground">{connection.company}</p>
-                    </div>
-                    <Button size="sm" variant="outline">Connect</Button>
+                <div className="p-4 bg-secondary/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Network className="w-5 h-5 text-primary" />
+                    <h3 className="font-medium">Network Analysis</h3>
                   </div>
-                ))}
+                  <p className="text-muted-foreground">
+                    Your connections show strong alignment with emerging AI research teams. Consider expanding into robotics.
+                  </p>
+                </div>
               </div>
             </Card>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Trending Companies */}
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-4">Trending Companies</h2>
-              <div className="space-y-4">
-                {trendingCompanies.map((company) => (
-                  <Link key={company.id} href={`/companies/${company.id}`}>
-                    <div className="flex items-start gap-4 p-4 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors">
-                      <Avatar>
-                        <AvatarImage src={company.logo} />
-                        <AvatarFallback>{company.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{company.name}</h3>
-                          <Badge variant="secondary" className="bg-primary/10 text-primary">
-                            {company.matchScore}% match
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{company.industry}</p>
-                        <p className="text-sm text-muted-foreground mt-1">{company.description}</p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </Card>
-
             {/* Quick Actions */}
             <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
+              <h2 className="text-lg font-semibold mb-4">Enhance Your <span className="text-primary font-semibold">Orbit</span></h2>
               <div className="space-y-3">
                 <Button className="w-full justify-start" variant="outline">
-                  <Briefcase className="w-4 h-4 mr-2" />
-                  Update Job Preferences
+                  <Bot className="w-4 h-4 mr-2" />
+                  Update AI Profile
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
-                  <GraduationCap className="w-4 h-4 mr-2" />
-                  Add New Skills
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share Your Story
                 </Button>
                 <Button className="w-full justify-start" variant="outline">
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  View Analytics
+                  <Star className="w-4 h-4 mr-2" />
+                  Highlight Achievements
                 </Button>
               </div>
             </Card>
@@ -281,18 +151,29 @@ export default function Home() {
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-            Your Career Accelerator
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Own your story and{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary to-primary/80">
+                orbit
+              </span>
+              <span className="absolute inset-0 bg-primary/10 blur-xl rounded-full"></span>
+            </span>
+            <br />
+            Shape your future. 
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Showcase your true potential, connect with opportunities, and build your career in the AI era - all powered by intelligent automation.
+            OrbitView transforms your experience into an AI-powered narrative. Go beyond static resumes - let your achievements, skills, and potential <span className="text-primary font-medium">orbit</span> together in a dynamic professional profile.
           </p>
           <div className="flex gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/signup">Get Started</Link>
+              <Link href="/signup">Start Your <span className="relative inline-block px-1">
+                <span className="relative z-10">Orbit</span>
+                <span className="absolute inset-0 bg-white/20 rounded-md blur-sm"></span>
+              </span></Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/demo">See Demo</Link>
+              <Link href="/demo">See It in Action</Link>
             </Button>
           </div>
         </div>
@@ -303,27 +184,27 @@ export default function Home() {
             <div className="mb-4 text-primary">
               <BrainCog className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">AI-Driven Portfolio</h3>
+            <h3 className="text-xl font-semibold mb-2">AI-Powered Story</h3>
             <p className="text-muted-foreground">
-              Showcase your projects and impact with AI-generated case studies and metrics that matter to employers.
+              Your experience is vectorized and analyzed by AI to create a rich, dynamic professional narrative that evolves with you.
             </p>
           </Card>
           <Card className="p-6 hover:shadow-lg transition-shadow">
             <div className="mb-4 text-primary">
-              <Zap className="w-8 h-8" />
+              <Orbit className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Smart Job Matching</h3>
+            <h3 className="text-xl font-semibold mb-2">Dynamic <span className="text-primary">Orbits</span></h3>
             <p className="text-muted-foreground">
-              Get personalized job and internship matches based on your skills, projects, and career aspirations.
+              Connect your skills, projects, and achievements in meaningful constellations that showcase your unique professional journey.
             </p>
           </Card>
           <Card className="p-6 hover:shadow-lg transition-shadow">
             <div className="mb-4 text-primary">
-              <Users className="w-8 h-8" />
+              <Network className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Intelligent Networking</h3>
             <p className="text-muted-foreground">
-              Connect with the right people based on mutual interests and opportunities, not cold outreach.
+              Our AI matches you with opportunities and connections based on your professional <span className="text-primary font-medium">orbit's</span> unique patterns.
             </p>
           </Card>
         </div>
@@ -332,16 +213,16 @@ export default function Home() {
         <Card className="bg-card rounded-xl p-8 shadow-lg">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">85%</div>
-              <p className="text-muted-foreground">of users land interviews within 30 days</p>
+              <div className="text-3xl font-bold text-primary mb-2">10x</div>
+              <p className="text-muted-foreground">richer professional profiles compared to traditional resumes</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-primary mb-2">95%</div>
+              <p className="text-muted-foreground">match accuracy with AI-powered opportunity recommendations</p>
             </div>
             <div>
               <div className="text-3xl font-bold text-primary mb-2">3x</div>
-              <p className="text-muted-foreground">faster job placement compared to traditional methods</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">92%</div>
-              <p className="text-muted-foreground">employer satisfaction with candidate matches</p>
+              <p className="text-muted-foreground">more meaningful professional connections</p>
             </div>
           </div>
         </Card>
